@@ -1,0 +1,355 @@
+{% comment%}
+<div class="col-lg-4">
+      <div class="sticky-comments">
+        <div class="card glass-card border-0 p-4">
+          <h4 class="fw-bold mb-3 text-center">💬 Comments</h4>
+
+          {% if comments %}
+          <div style="max-height: 400px; overflow-y: auto;">
+            {% for comment in comments %}
+            <div class="border-start border-3 border-secondary ps-3 mb-3">
+              <p class="mb-1">
+                <strong>{{comment.author.username}}</strong>
+                <small class="text-muted">• {{ comment.created_on|date:"F j, Y, g:i A" }}</small>
+              </p>
+              <p>{{comment.body}} </p>
+            </div>
+            {% endfor %}
+          </div>
+          {% else%}
+          <p class="text-muted fst-italic text-center">No comments yet. Be the first to comment!</p>
+          {% endif %}
+          <hr>
+
+          <form method="POST" action="#" class="mt-3">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Add a Comment</label>
+              <textarea name="comment_body" class="form-control" rows="3" placeholder="Write something..." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-dark w-100">Post Comment</button>
+          </form>
+        </div>
+      </div>
+    </div>
+<!-- _-------------------------------------- -->
+
+<style>
+  /* Glassy card aesthetic */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Individual comment styling */
+  .comment-box {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 15px;
+    transition: 0.25s ease;
+  }
+
+  .comment-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .comment-author {
+    font-weight: 600;
+    color: #212529;
+  }
+
+  .comment-meta {
+    font-size: 0.85rem;
+    color: #777;
+  }
+
+  /* Reply section aesthetic */
+  .reply-box {
+    background: #fcfcfc;
+    border-left: 3px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 10px 15px;
+    margin-top: 10px;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .reply-box:hover {
+    background: #f5f5f5;
+  }
+
+  /* Toggle link */
+  .reply-toggle {
+    color: #555;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .reply-toggle:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  /* Scrollable area */
+  .comment-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #bbb transparent;
+  }
+
+  .comment-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .comment-scroll::-webkit-scrollbar-thumb {
+    background: #bbb;
+    border-radius: 10px;
+  }
+
+  /* Sticky layout */
+  .sticky-comments {
+    position: sticky;
+    top: 90px;
+  }
+</style>
+
+<div class="col-lg-4">
+  <div class="sticky-comments">
+    <div class="card glass-card border-0 p-4">
+      <h4 class="fw-bold mb-4 text-center">💬 Comments</h4>
+
+      {% if comments %}
+      <div class="comment-scroll">
+        {% for comment in comments %}
+        <div class="comment-box">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="comment-author">{{ comment.author.username }}</span>
+            <span class="comment-meta">{{ comment.created_on|date:"M j, Y · g:i A" }}</span>
+          </div>
+          <p class="mb-2">{{ comment.body }}</p>
+
+          <!-- Reply Button -->
+          {% if user.is_authenticated %}
+          <span class="reply-toggle" data-bs-toggle="collapse" href="#replyForm{{ comment.id }}">
+            ↩ Reply
+          </span>
+          <div class="collapse mt-2" id="replyForm{{ comment.id }}">
+            <form method="POST" action="">
+              {% csrf_token %}
+              <input type="hidden" name="parent_id" value="{{ comment.id }}">
+              <textarea name="comment_body" class="form-control mb-2" rows="2" placeholder="Write a reply..." required></textarea>
+              <button type="submit" class="btn btn-sm btn-outline-dark">Reply</button>
+            </form>
+          </div>
+          {% endif %}
+
+          <!-- Replies (Hidden Toggle) -->
+          {% with comment.replies.count as reply_count %}
+          {% if reply_count > 0 %}
+          <div class="mt-2">
+            <span class="reply-toggle fw-semibold" data-bs-toggle="collapse" href="#replies{{ comment.id }}" role="button">
+              💬 View {{ reply_count }} {{ reply_count|pluralize:"reply,replies" }}
+            </span>
+            <div class="collapse mt-2" id="replies{{ comment.id }}">
+              {% for reply in comment.replies.all %}
+              <div class="reply-box">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <span class="comment-author">{{ reply.author.username }}</span>
+                  <span class="comment-meta">{{ reply.created_on|date:"M j, Y · g:i A" }}</span>
+                </div>
+                <p class="mb-1">{{ reply.body }}</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+          {% endwith %}
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-muted fst-italic text-center">No comments yet. Be the first to comment!</p>
+      {% endif %}
+
+      <hr>
+
+      <!-- Add New Comment -->
+      {% if user.is_authenticated %}
+      <form method="POST" action="" class="mt-3">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Add a Comment</label>
+          <textarea name="comment_body" class="form-control" rows="3" placeholder="Write something..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-dark w-100">Post Comment</button>
+      </form>
+      {% else %}
+      <p class="text-center text-muted mt-3">
+        Please <a href="{% url 'login' %}" class="text-decoration-none fw-semibold">login</a> to add a comment.
+      </p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endcomment%}
+<style>
+  /* === Base Styling === */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+  }
+
+  .comment-box {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 15px;
+    transition: all 0.25s ease;
+  }
+
+  .comment-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  }
+
+  .reply-box {
+    background: #ffffff;
+    border-left: 3px solid #343a40;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-left: 25px;
+    padding: 10px 15px;
+  }
+
+  .reply-toggle {
+    color: #6c757d;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .reply-toggle:hover {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .comment-author {
+    font-weight: 600;
+    color: #000;
+  }
+
+  .comment-meta {
+    font-size: 0.85rem;
+    color: #777;
+  }
+
+  .sticky-comments {
+    position: sticky;
+    top: 90px;
+  }
+
+  .comment-scroll {
+    max-height: 450px;
+    overflow-y: auto;
+  }
+</style>
+
+<div class="col-lg-4">
+  <div class="sticky-comments">
+    <div class="card glass-card border-0 p-4">
+      <h4 class="fw-bold mb-3 text-center"> Comments</h4>
+
+      {% if comments %}
+      <div class="comment-scroll">
+
+        {% for comment in comments %}
+        {% if not comment.parent %}
+        <div class="comment-box">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <span class="comment-author">{{ comment.author.username }}</span>
+            <span class="comment-meta">{{ comment.created_on|date:"M j, Y, g:i A" }}</span>
+          </div>
+          <p class="mb-2">{{ comment.body }}</p>
+
+          {% if user.is_authenticated %}
+          <span class="reply-toggle" data-bs-toggle="collapse" href="#replyForm{{ comment.id }}">
+            ↩ Reply
+          </span>
+          <div class="collapse mt-2" id="replyForm{{ comment.id }}">
+            <form method="POST" action="">
+              {% csrf_token %}
+              <input type="hidden" name="parent_id" value="{{ comment.id }}">
+              <textarea name="comment_body" class="form-control mb-2" rows="2" placeholder="Write a reply..." required></textarea>
+              <button type="submit" class="btn btn-sm btn-outline-dark">Reply</button>
+            </form>
+          </div>
+          {% endif %}
+          {% comment%}
+          <!-- 🧵 Replies (Collapsible) -->
+          {% with replies=comments|dictsort:"created_on" %}
+          {% set reply_count = 0 %}
+          {% for reply in comments %}
+            {% if reply.parent and reply.parent.id == comment.id %}
+              {% with reply_count=reply_count|add:1 %}{% endwith %}
+            {% endif %}
+          {% endfor %}
+          {% endwith %}
+          {% endcomment%}
+
+          {% if comment.replies.all %}
+          <div class="mt-2">
+            <span class="reply-toggle" data-bs-toggle="collapse" href="#replies{{ comment.id }}">
+               View {{ comment.replies.count }} reply{{ comment.replies.count|pluralize }} ⤵
+            </span>
+            <div class="collapse mt-2" id="replies{{ comment.id }}">
+              {% for reply in comments %}
+                {% if reply.parent and reply.parent.id == comment.id %}
+                <div class="reply-box">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="comment-author">{{ reply.author.username }}</span>
+                    <span class="comment-meta">{{ reply.created_on|date:"M j, Y, g:i A" }}</span>
+                  </div>
+                  <p class="mb-1">{{ reply.body }}</p>
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+
+      </div>
+      {% else %}
+      <p class="text-muted fst-italic text-center">No comments yet. Be the first to comment!</p>
+      {% endif %}
+
+      <hr>
+
+      <!-- Add Comment -->
+      {% if user.is_authenticated %}
+      <form method="POST" action="" class="mt-3">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Add a Comment</label>
+          <textarea name="comment_body" class="form-control" rows="3" placeholder="Write something..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-dark w-100">Post Comment</button>
+      </form>
+      {% else %}
+      <p class="text-center text-muted mt-3">
+        Please <a href="{% url 'login' %}" class="text-decoration-none fw-semibold">login</a> to join the discussion.
+      </p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+

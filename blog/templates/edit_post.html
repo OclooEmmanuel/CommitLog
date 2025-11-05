@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm p-4 border-0">
+        <h2 class="text-center mb-4">Edit Post</h2>
+
+        {% if error %}
+          <div class="alert alert-danger text-center">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Title</label>
+            <input type="text" name="title" class="form-control" value="{{ post.title }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Body</label>
+            <textarea name="body" class="form-control" rows="6" required>{{ post.body }}</textarea>
+          </div>
+
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-dark px-4">Update Post</button>
+            <a href="{% url 'post_detail' post.slug %}" class="btn btn-outline-secondary px-4">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

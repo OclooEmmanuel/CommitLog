@@ -1,0 +1,27 @@
+        {% if post.slug %}
+        <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ post.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+              <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel{{ post.id }}">Confirm Delete</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                <div class="mb-4">
+                  <i class="fas fa-exclamation-triangle text-danger fa-3x mb-3"></i>
+                  <h5 class="fw-bold">Are you sure you want to delete?</h5>
+                </div>
+                <p class="fs-6">Post: <strong>"{{ post.title }}"</strong></p>
+                <p class="text-muted small">This action cannot be undone. All content will be permanently removed.</p>
+              </div>
+              <div class="modal-footer justify-content-center border-0">
+                <form method="POST" action="{% url 'post_delete' post.slug %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-danger px-4">Yes, Delete</button>
+                </form>
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}

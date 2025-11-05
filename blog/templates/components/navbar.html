@@ -1,0 +1,104 @@
+<!-- Google Font: Press Start 2P -->
+
+
+<style>
+  /* @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap'); */
+
+  /* Navbar Styling */
+  .navbar-commitlog {
+    background: linear-gradient(90deg, #0d0d0d, #1a1a1a);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    padding: 0.7rem 0;
+  }
+
+  /* CommitLog Brand – Minecraft style */
+  .navbar-brand {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    color: #00ffe0 !important; /* Neon Cyan Glow */
+    text-shadow: 0 0 50px #00ffe0, 0 0 0px #00ffe0;
+    transition: text-shadow 0.3s ease, transform 0.2s;
+  }
+
+  .navbar-brand:hover {
+    text-shadow: 0 0 20px #00ffe0, 0 0 40px #00ffe0;
+    transform: scale(1.05);
+  }
+
+  /* Navigation links */
+  .nav-link {
+    color: #e0e0e0 !important;
+    margin: 0 10px;
+    font-weight: 500;
+    transition: color 0.3s, transform 0.2s;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: #00ffe0 !important;
+    transform: translateY(-2px);
+  }
+
+  /* Buttons */
+  .btn-login {
+    background-color: #1a1a1a;
+    color: #ffffff;
+    border-radius: 0px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-login:hover {
+    background-color: #00ffe0;
+    color: #000;
+    transform: translateY(-1px);
+  }
+
+  .btn-logout {
+    border: 1px solid #00ffe0;
+    color: #00ffe0;
+    border-radius: 0px;
+    font-weight: 500;
+  }
+
+  .btn-logout:hover {
+    background-color: #00ffe0;
+    color: #000;
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-commitlog sticky-top">
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'post_list' %}">
+      <i class="fa-solid fa-terminal me-2 text-info"></i> <!-- 👈 terminal-style favicon -->
+      CommitLog
+    </a>
+
+    <!-- Mobile Toggle -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+      aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
+      <div class="navbar-nav">
+        <a class="nav-link {% if request.resolver_match.url_name == 'post_list' %}active{% endif %}" href="{% url 'post_list' %}">Home</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'post_add' %}active{% endif %}" href="{% url 'post_add' %}">Add Post</a>
+      </div>
+
+      <!-- Right section -->
+      <div class="d-flex align-items-center">
+        {% if user.is_authenticated %}
+          <span class="text-light me-3">Hi,<a href="{% url 'user_posts' %}"> {{ user.username }} </a> </span>
+          <a href="{% url 'logout' %}" class="btn btn-logout btn-sm">Logout</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-login btn-sm me-2">Login</a>
+          <a href="{% url 'register' %}" class="btn btn-login btn-sm">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>

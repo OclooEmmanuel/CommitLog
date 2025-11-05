@@ -1,0 +1,161 @@
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+    }
+
+    /* Compact Footer Styling */
+    footer {
+      background: linear-gradient(135deg, #f8f9fa, #ffffff);
+      color: #333;
+      border-top: 1px solid #e0e0e0;
+      font-family: "Inter", sans-serif;
+      padding: 0.75rem 0 0.5rem;
+      margin-top: auto;
+    }
+
+    .footer-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .footer-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #00bcd4;
+      margin-bottom: 0.25rem;
+    }
+
+    .footer-tagline {
+      font-size: 0.75rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e0e0e0;
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #555;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #00bcd4;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .social-links a {
+      color: #555;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+    }
+
+    .social-links a:hover {
+      color: #00bcd4;
+      transform: translateY(-2px);
+    }
+
+    .footer-copyright {
+      font-size: 0.8rem;
+      color: #888;
+      text-align: center;
+      margin: 0;
+    }
+
+    .footer-copyright strong {
+      color: #555;
+    }
+
+    .footer-copyright .text-info {
+      color: #00bcd4 !important;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .footer-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-links {
+        justify-content: center;
+      }
+    }
+  </style>
+
+  <!-- Compact Footer -->
+  <footer>
+    <div class="footer-container">
+      <!-- Brand -->
+      <div class="text-center">
+        <div class="footer-brand">
+          <i class="bi bi-terminal"></i>
+          CommitLog
+        </div>
+        <p class="footer-tagline">Chronicling code, creativity, and change 🧠💡</p>
+      </div>
+
+      <!-- Links & Socials -->
+      <div class="footer-content">
+        <nav class="footer-links">
+          <a href="#">Home</a>
+          <a href="#">Add Post</a>
+          <a href="#">About</a>
+          <a href="#">Contact</a>
+        </nav>
+
+        <div class="social-links">
+          <a href="#" aria-label="GitHub"><i class="bi bi-github"></i></a>
+          <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+          <a href="#" aria-label="Email"><i class="bi bi-envelope"></i></a>
+        </div>
+      </div>
+
+      <!-- Copyright -->
+      <p class="footer-copyright">
+        © <span id="year"></span> <strong>CommitLog</strong> — Crafted with ❤️ using <span class="text-info">Django</span> & <span class="text-info">Bootstrap</span>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // Auto-update copyright year
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+

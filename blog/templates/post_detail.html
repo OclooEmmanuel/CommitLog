@@ -1,0 +1,75 @@
+{% extends 'base.html'%}
+
+
+{% block content %}
+
+<style>
+  /* Modern background and shadows */
+  body {
+    background: #f4f4f4;
+  }
+
+  .deep-shadow {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
+    border-radius: 15px;
+    background: #fff;
+  }
+
+  /* Glassmorphism style for comment box */
+  .glass-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+  }
+
+  /* Sticky comment section */
+  .sticky-comments {
+    position: sticky;
+    top: 90px;
+  }
+
+  /* Subtle hover effect for post buttons */
+  .btn:hover {
+    transform: translateY(-1px);
+    transition: 0.2s ease;
+  }
+</style>
+
+<div class="container my-5">
+  <div class="row g-4">
+
+    <!-- Left Column: Post Content -->
+    <div class="col-lg-8">
+      <div class="card deep-shadow border-0 p-4">
+        <div class="card-body">
+          <h1 class="fw-bold mb-3">{{post.title}}</h1>
+
+          <p class="text-muted mb-4">
+            By <strong>{{post.author}}</strong> • {{ post.created_on|date:"F j, Y" }}
+          </p>
+
+          <hr>
+
+          <div class="fs-5 lh-lg">
+            {{post.body}}
+          </div>
+
+          <hr class="my-4">
+
+          <div>
+            <a href="{% url 'post_list' %}" class="btn btn-outline-secondary me-2">← Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Comments -->
+    {% include "components/comment.html"%}
+
+  </div>
+</div>
+
+{% endblock %}
+
+
