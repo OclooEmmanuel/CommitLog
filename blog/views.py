@@ -103,7 +103,6 @@ def post_delete(request, slug):
 
 
 
-
 # show all user posts
 @login_required
 def user_posts(request):

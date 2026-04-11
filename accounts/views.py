@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 
+
 # Create your views here.
 def register(request):
     if request.method == "POST":
@@ -12,6 +13,7 @@ def register(request):
         email = request.POST.get('email', "").strip()
         password =request.POST.get('password1')
         confirm_password = request.POST.get('password2')
+
 
         if password != confirm_password:
             messages.error(request,"Passwords do not match!")
@@ -44,7 +46,7 @@ def login_view(request):
         user = authenticate(username=username, password=password)
         if not user is None:
             login(request,user)
-            # messages.success(request,f"welcome back {user.username}!")
+            messages.success(request,f"welcome back {user.username}!")
             return redirect ('post_list')
         else:
             messages.error(request, "Invalid usrname or password.")

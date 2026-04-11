@@ -85,7 +85,10 @@
     <!-- Links -->
     <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
       <div class="navbar-nav">
-        <a class="nav-link {% if request.resolver_match.url_name == 'post_list' %}active{% endif %}" href="{% url 'post_list' %}">Home</a>
+        {% comment %} <a class="nav-link {% if request.resolver_match.url_name == 'post_list' %}active{% endif %}" href="{% url 'post_list' %}">Home</a> {% endcomment %}
+        <a class="nav-link {% if request.resolver_match.url_name == 'post_list' %}active{% endif %}" href="{% url 'post_list'%}"> Home</a>
+
+
         <a class="nav-link {% if request.resolver_match.url_name == 'post_add' %}active{% endif %}" href="{% url 'post_add' %}">Add Post</a>
       </div>
 
