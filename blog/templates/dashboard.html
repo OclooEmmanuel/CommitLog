@@ -76,7 +76,7 @@
                 <small class="text-secondary">By {{ post.author }}</small>
                 <small class="text-secondary">• {{ post.created_on|date:"M d, Y" }}</small>
               </div>
-              <a href="{% url 'post_detail' post.slug %}" class="btn btn-outline-dark btn-sm btn-read">
+              <a href="{% url 'blog:post_detail' post.slug %}" class="btn btn-outline-dark btn-sm btn-read">
                 Read More →
               </a>
             </div>

@@ -1,0 +1,11 @@
+<form class="mt-2"
+      hx-post="{% url 'blog:add_comment_htmx' comment.post.slug %}"
+      hx-target="#replies-{{ comment.parent.id|default:comment.id }}"
+      hx-swap="innerHTML"
+      hx-on::after-request="this.remove()">
+  {% csrf_token %}
+  <input type="hidden" name="parent_id" value="{{ comment.id }}">
+  <textarea name="body" class="form-control mb-2" rows="2" placeholder="Write a reply..." required></textarea>
+  <button type="submit" class="btn btn-sm btn-outline-dark">Submit Reply</button>
+  <button type="button" class="btn btn-sm btn-link" onclick="this.closest('form').remove()">Cancel</button>
+</form>

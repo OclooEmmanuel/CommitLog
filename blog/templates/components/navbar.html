@@ -71,7 +71,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark navbar-commitlog sticky-top">
   <div class="container">
     <!-- Brand -->
-    <a class="navbar-brand d-flex align-items-center" href="{% url 'post_list' %}">
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'blog:post_list' %}">
       <i class="fa-solid fa-terminal me-2 text-info"></i> <!-- 👈 terminal-style favicon -->
       CommitLog
     </a>
@@ -86,16 +86,16 @@
     <div class="collapse navbar-collapse justify-content-between" id="navbarContent">
       <div class="navbar-nav">
         {% comment %} <a class="nav-link {% if request.resolver_match.url_name == 'post_list' %}active{% endif %}" href="{% url 'post_list' %}">Home</a> {% endcomment %}
-        <a class="nav-link {% if request.resolver_match.url_name == 'post_list' %}active{% endif %}" href="{% url 'post_list'%}"> Home</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'post_list' %}active{% endif %}" href="{% url 'blog:post_list'%}"> Home</a>
 
 
-        <a class="nav-link {% if request.resolver_match.url_name == 'post_add' %}active{% endif %}" href="{% url 'post_add' %}">Add Post</a>
+        <a class="nav-link {% if request.resolver_match.url_name == 'post_add' %}active{% endif %}" href="{% url 'blog:post_add' %}">Add Post</a>
       </div>
 
       <!-- Right section -->
       <div class="d-flex align-items-center">
         {% if user.is_authenticated %}
-          <span class="text-light me-3">Hi,<a href="{% url 'user_posts' %}"> {{ user.username }} </a> </span>
+          <span class="text-light me-3">Hi,<a href="{% url 'blog:user_posts' %}"> {{ user.username }} </a> </span>
           <a href="{% url 'logout' %}" class="btn btn-logout btn-sm">Logout</a>
         {% else %}
           <a href="{% url 'login' %}" class="btn btn-login btn-sm me-2">Login</a>
