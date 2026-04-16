@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
-    slug = AutoSlugField(populate_from='title' ,unique= True,  editable=True)
+    slug = AutoSlugField(populate_from='title', unique=True, editable=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
