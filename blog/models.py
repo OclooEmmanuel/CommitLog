@@ -1,12 +1,13 @@
 from django.db import models
-from autoslug import AutoSlugField
+# from autoslug import AutoSlugField
+from django.utils.text import slugify
 from django.contrib.auth.models import User
 
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
-    slug = AutoSlugField(populate_from='title', unique=True, editable=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    slug = models.SlugField(unique=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
 
@@ -15,6 +16,11 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
 
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
