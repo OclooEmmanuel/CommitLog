@@ -22,6 +22,8 @@ class Post(models.Model):
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 
+        
+
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post,on_delete=models.CASCADE, related_name="comments")
