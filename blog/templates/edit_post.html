@@ -1,36 +1,37 @@
 {% extends 'base.html' %}
-{% block content %}
 
-<div class="container mt-5">
+{% block content %}
+<div class="container py-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card shadow-sm p-4 border-0">
-        <h2 class="text-center mb-4">Edit Post</h2>
+    <div class="col-lg-8">
+      <div class="bg-card border-card" style="border-radius:var(--radius-lg);padding:2.5rem;">
+        <h3 class="fw-bold mb-4"><i class="bi bi-pencil me-2"></i>Edit Post</h3>
 
         {% if error %}
-          <div class="alert alert-danger text-center">{{ error }}</div>
+        <div class="alert-commitlog alert-commitlog-error mb-4">{{ error }}</div>
         {% endif %}
 
-        <form method="POST">
+        <form method="POST" class="form-commitlog">
           {% csrf_token %}
           <div class="mb-3">
-            <label class="form-label fw-semibold">Title</label>
+            <label class="form-label">Title</label>
             <input type="text" name="title" class="form-control" value="{{ post.title }}" required>
           </div>
 
           <div class="mb-3">
-            <label class="form-label fw-semibold">Body</label>
+            <label class="form-label">Body</label>
             <textarea name="body" class="form-control" rows="6" required>{{ post.body }}</textarea>
           </div>
 
-          <div class="text-center mt-4">
-            <button type="submit" class="btn btn-dark px-4">Update Post</button>
-            <a href="{% url 'post_detail' post.slug %}" class="btn btn-outline-secondary px-4">Cancel</a>
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="{% url 'blog:post_detail' post.slug %}" class="btn btn-commitlog btn-commitlog-outline">Cancel</a>
+            <button type="submit" class="btn btn-commitlog btn-commitlog-primary">
+              <i class="bi bi-check-lg"></i> Update Post
+            </button>
           </div>
         </form>
       </div>
     </div>
   </div>
 </div>
-
 {% endblock %}

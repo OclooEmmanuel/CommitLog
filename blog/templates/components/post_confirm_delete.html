@@ -1,27 +1,29 @@
-        {% if post.slug %}
-        <div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ post.id }}" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-              <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="deleteModalLabel{{ post.id }}">Confirm Delete</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body text-center">
-                <div class="mb-4">
-                  <i class="fas fa-exclamation-triangle text-danger fa-3x mb-3"></i>
-                  <h5 class="fw-bold">Are you sure you want to delete?</h5>
-                </div>
-                <p class="fs-6">Post: <strong>"{{ post.title }}"</strong></p>
-                <p class="text-muted small">This action cannot be undone. All content will be permanently removed.</p>
-              </div>
-              <div class="modal-footer justify-content-center border-0">
-                <form method="POST" action="{% url 'blog:post_delete' post.slug %}">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-danger px-4">Yes, Delete</button>
-                </form>
-                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endif %}
+{% if post.slug %}
+<div class="modal fade" id="deleteModal{{ post.id }}" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background:var(--bg-secondary);border:1px solid var(--border);">
+      <div class="modal-header" style="border-bottom-color:var(--border);">
+        <h5 class="modal-title fw-bold" style="color:var(--accent-red);">
+          <i class="bi bi-exclamation-triangle me-2"></i>Confirm Delete
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <i class="bi bi-trash3" style="font-size:3rem;color:var(--accent-red);"></i>
+        <h5 class="fw-bold mt-3 mb-2">Are you sure?</h5>
+        <p class="mb-1" style="color:var(--text-secondary);">Post: <strong style="color:var(--text-primary);">"{{ post.title }}"</strong></p>
+        <p style="color:var(--text-muted);font-size:0.875rem;">This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer justify-content-center" style="border-top-color:var(--border);">
+        <form method="POST" action="{% url 'blog:post_delete' post.slug %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-commitlog btn-commitlog-danger">
+            <i class="bi bi-trash"></i> Yes, Delete
+          </button>
+        </form>
+        <button type="button" class="btn btn-commitlog btn-commitlog-outline" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

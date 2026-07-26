@@ -1,220 +1,86 @@
-{% extends 'base.html'%}
-{% comment %}
+{% extends 'base.html' %}
 
 {% block content %}
 
-<style>
-  /* Modern background and shadows */
-  body {
-    background: #f4f4f4;
-  }
-
-  .deep-shadow {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
-    border-radius: 15px;
-    background: #fff;
-  }
-
-  /* Glassmorphism style for comment box */
-  .glass-card {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
-  }
-
-  /* Sticky comment section */
-  .sticky-comments {
-    position: sticky;
-    top: 90px;
-  }
-
-  /* Subtle hover effect for post buttons */
-  .btn:hover {
-    transform: translateY(-1px);
-    transition: 0.2s ease;
-  }
-</style>
-
-<div class="container my-5">
-  <div class="row g-4">
-
-    <!-- Left Column: Post Content -->
-    <div class="col-lg-8">
-      <div class="card deep-shadow border-0 p-4">
-        <div class="card-body">
-          <h1 class="fw-bold mb-3">{{post.title}}</h1>
-
-          <p class="text-muted mb-4">
-            By <strong>{{post.author}}</strong> • {{ post.created_on|date:"F j, Y" }}
-          </p>
-
-          <hr>
-
-          <div class="fs-5 lh-lg">
-            {{post.body}}
-          </div>
-
-          <hr class="my-4">
-
-          <div>
-            <a href="{% url 'post_list' %}" class="btn btn-outline-secondary me-2">← Back</a>
-          </div>
-        </div>
+<div class="article-container">
+  <div class="article-header">
+    <h1>{{ post.title }}</h1>
+    <div class="article-meta">
+      <div class="d-flex align-items-center gap-2">
+        <div class="author-avatar d-flex align-items-center justify-content-center">{{ post.author.username|first|upper }}</div>
+        <span><strong>{{ post.author }}</strong></span>
       </div>
+      <span>&middot;</span>
+      <span>{{ post.created_on|date:"F j, Y" }}</span>
+      {% if user == post.author %}
+      <span class="ms-auto d-flex gap-2">
+        <a href="{% url 'blog:post_edit' post.slug %}" class="btn btn-commitlog btn-commitlog-outline btn-sm">
+          <i class="bi bi-pencil"></i> Edit
+        </a>
+        <button type="button" class="btn btn-commitlog btn-commitlog-danger btn-sm"
+                data-bs-toggle="modal" data-bs-target="#deleteModal{{ post.id }}">
+          <i class="bi bi-trash"></i> Delete
+        </button>
+      </span>
+      {% endif %}
     </div>
+  </div>
 
-    <!-- Right Column: Comments -->
-    {% include "components/comment.html"%}
+  <hr class="article-divider">
 
+  <div class="article-body">
+    {{ post.body|linebreaks }}
+  </div>
+
+  <hr class="article-divider">
+
+  <div class="article-actions">
+    <a href="{% url 'blog:post_list' %}" class="btn-back">
+      <i class="bi bi-arrow-left"></i> Back to all posts
+    </a>
   </div>
 </div>
 
-{% endblock %}
+{% include 'components/post_confirm_delete.html' %}
 
- {% endcomment %}
+<div class="comments-section" id="comments-section">
 
-
-
-{% load static %}
-
-{% block content %}
-
-<style>
-  /* Modern background and shadows */
-  body {
-    background: #f4f4f4;
-  }
-
-  .deep-shadow {
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
-    border-radius: 15px;
-    background: #fff;
-  }
-
-  /* Glassmorphism style for comment box */
-  .glass-card {
-    backdrop-filter: blur(10px);
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
-  }
-
-  /* Sticky comment section */
-  .sticky-comments {
-    position: sticky;
-    top: 90px;
-  }
-
-  /* Subtle hover effect for post buttons */
-  .btn:hover {
-    transform: translateY(-1px);
-    transition: 0.2s ease;
-  }
-
-  /* HTMX loading indicator */
-  .htmx-indicator {
-    opacity: 0;
-    transition: opacity 500ms ease-in;
-  }
-  .htmx-request .htmx-indicator {
-    opacity: 1;
-  }
-  .htmx-request.htmx-indicator {
-    opacity: 1;
-  }
-</style>
-
-<div class="container my-5">
-  <div class="row g-4">
-
-    <!-- Left Column: Post Content -->
-    <div class="col-lg-8">
-      <div class="card deep-shadow border-0 p-4">
-        <div class="card-body">
-          <h1 class="fw-bold mb-3">{{post.title}}</h1>
-
-          <p class="text-muted mb-4">
-            By <strong>{{post.author}}</strong> • {{ post.created_on|date:"F j, Y" }}
-          </p>
-
-          <hr>
-
-          <div class="fs-5 lh-lg">
-            {{post.body}}
-          </div>
-
-          <hr class="my-4">
-
-          <div>
-            <a href="{% url 'blog:post_list' %}" class="btn btn-outline-secondary me-2">← Back</a>
-          </div>
-        </div>
-      </div>
+  {% if user.is_authenticated %}
+  <form class="comment-form mb-4"
+        hx-post="{% url 'blog:add_comment_htmx' post.slug %}"
+        hx-target="#comments-list"
+        hx-swap="innerHTML"
+        hx-indicator="#comment-indicator"
+        hx-on::after-request="this.reset()">
+    {% csrf_token %}
+    <textarea name="body" rows="2" placeholder="Write a comment..." required></textarea>
+    <div class="d-flex justify-content-end mt-2">
+      <button type="submit" class="btn btn-commitlog btn-commitlog-primary btn-sm">
+        <i class="bi bi-chat-dots"></i>
+        <span class="htmx-indicator-off">Post Comment</span>
+        <span class="htmx-indicator"><span class="spinner-border spinner-border-sm me-1"></span>Posting...</span>
+      </button>
     </div>
+  </form>
+  {% else %}
+  <div class="alert-commitlog alert-commitlog-info mb-4">
+    Please <a href="{% url 'login' %}">login</a> to join the discussion.
+  </div>
+  {% endif %}
 
-    <!-- Right Column: Comments with HTMX -->
-    <div class="col-lg-4">
-      <div class="sticky-comments">
-        <div class="card glass-card border-0 p-4">
-          <h4 class="fw-bold mb-3 text-center">Comments</h4>
-
-          <!-- Comments Container - HTMX will update this -->
-          <div id="comments-container"
-               hx-get="{% url 'blog:comment_list' post.slug %}"
-               hx-trigger="load, commentChanged from:body"
-               hx-swap="innerHTML"
-               hx-target="#comments-container">
-            <div class="text-center py-4">
-              <div class="spinner-border text-secondary" role="status"></div>
-              <p class="mt-2">Loading comments...</p>
-            </div>
-          </div>
-
-          <hr>
-
-          <!-- Add Comment Form with HTMX -->
-          {% if user.is_authenticated %}
-          <form class="mt-3"
-                hx-post="{% url 'blog:add_comment_htmx' post.slug %}"
-                hx-target="#comments-container"
-                hx-swap="innerHTML"
-                hx-indicator="#comment-form-indicator"
-                hx-on::after-request="this.reset()">
-            {% csrf_token %}
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Add a Comment</label>
-              <textarea name="body" class="form-control" rows="3" placeholder="Write something..." required></textarea>
-            </div>
-            <button type="submit" class="btn btn-dark w-100">
-              <span class="htmx-indicator" id="comment-form-indicator">
-                <span class="spinner-border spinner-border-sm me-2"></span>Posting...
-              </span>
-              <span class="htmx-indicator-off">Post Comment</span>
-            </button>
-          </form>
-          {% else %}
-          <p class="text-center text-muted mt-3">
-            Please <a href="{% url 'login' %}" class="text-decoration-none fw-semibold">login</a> to join the discussion.
-          </p>
-          {% endif %}
-        </div>
-      </div>
+  <div id="comments-list"
+       hx-get="{% url 'blog:comment_list' post.slug %}"
+       hx-trigger="load, commentAdded from:body"
+       hx-swap="innerHTML">
+    <div class="comments-header">
+      <h3><i class="bi bi-chat-dots me-2"></i>Comments <span id="comment-count">0</span></h3>
     </div>
-
+    <div class="text-center py-4">
+      <div class="skeleton" style="height:60px;margin-bottom:1rem;"></div>
+      <div class="skeleton" style="height:60px;margin-bottom:1rem;"></div>
+      <div class="skeleton" style="height:60px;"></div>
+    </div>
   </div>
 </div>
-
-<script>
-  // Helper function for Bootstrap collapse (if using Bootstrap 5)
-  function toggleReplies(id) {
-    const element = document.getElementById(id);
-    if (element.classList.contains('show')) {
-      element.classList.remove('show');
-    } else {
-      element.classList.add('show');
-    }
-  }
-</script>
 
 {% endblock %}

@@ -1,11 +1,20 @@
-<form class="mt-2"
-      hx-post="{% url 'blog:add_comment_htmx' comment.post.slug %}"
-      hx-target="#replies-{{ comment.parent.id|default:comment.id }}"
-      hx-swap="innerHTML"
-      hx-on::after-request="this.remove()">
-  {% csrf_token %}
-  <input type="hidden" name="parent_id" value="{{ comment.id }}">
-  <textarea name="body" class="form-control mb-2" rows="2" placeholder="Write a reply..." required></textarea>
-  <button type="submit" class="btn btn-sm btn-outline-dark">Submit Reply</button>
-  <button type="button" class="btn btn-sm btn-link" onclick="this.closest('form').remove()">Cancel</button>
-</form>
+<div class="reply-form-inline"
+     id="reply-form-inline-{{ comment.id }}">
+  <form hx-post="{% url 'blog:add_comment_htmx' comment.post.slug %}"
+        hx-target="#comments-list"
+        hx-swap="innerHTML"
+        hx-indicator="#reply-indicator-{{ comment.id }}"
+        hx-on::after-request="this.closest('.reply-form-inline').remove()">
+    {% csrf_token %}
+    <input type="hidden" name="parent_id" value="{{ comment.id }}">
+    <textarea name="body" rows="2" placeholder="Write a reply..." required></textarea>
+    <div class="d-flex justify-content-end gap-2 mt-2">
+      <button type="button" class="btn btn-commitlog btn-commitlog-outline btn-sm" onclick="this.closest('.reply-form-inline').remove()">Cancel</button>
+      <button type="submit" class="btn btn-commitlog btn-commitlog-primary btn-sm" id="reply-indicator-{{ comment.id }}">
+        <i class="bi bi-reply"></i>
+        <span class="htmx-indicator-off">Reply</span>
+        <span class="htmx-indicator"><span class="spinner-border spinner-border-sm me-1"></span>Replying...</span>
+      </button>
+    </div>
+  </form>
+</div>
