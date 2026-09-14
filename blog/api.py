@@ -9,4 +9,3 @@ def post_list_api(request):
     posts = Post.objects.all()
     serializers = PostSerialiser(posts, many =True)
     return Response(serializers.data)
-

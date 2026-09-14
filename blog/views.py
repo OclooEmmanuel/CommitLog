@@ -105,7 +105,7 @@ def post_detail_original(request, slug):
                 body=body,
                 parent=parent_comment
             )
-        return redirect('post_detail', slug=post.slug)
+        return redirect('blog:post_detail', slug=post.slug)
 
     return render(request, 'post_detail.html', {'post': post, 'comments': comments})
 
@@ -126,7 +126,7 @@ def post_add(request):
             body=body,
             author=request.user,
         )
-        return redirect('post_detail', slug=post.slug)
+        return redirect('blog:post_detail', slug=post.slug)
     return render(request, "add_post.html")
 
 # Edit post
@@ -146,7 +146,7 @@ def post_edit(request, slug):
         post.title = title
         post.body = body
         post.save()
-        return redirect("post_detail", slug=post.slug)
+        return redirect("blog:post_detail", slug=post.slug)
     return render(request, "edit_post.html", {"post": post})
 
 # delete a post
@@ -154,11 +154,11 @@ def post_edit(request, slug):
 def post_delete(request, slug):
     post = get_object_or_404(Post, slug=slug)
     if request.user != post.author:
-        return redirect('post_list')
+        return redirect('blog:post_list')
 
     if request.method == 'POST':
         post.delete()
-        return redirect('post_list')
+        return redirect('blog:post_list')
     return render(request, 'components/post_confirm_delete.html', {'post': post})
 
 # show all user posts
@@ -212,7 +212,7 @@ def user_posts(request):
 #                 body =body,
 #                 parent = parent_comment
 #             )
-#         return redirect('post_detail', slug=post.slug)
+#         return redirect('blog:post_detail', slug=post.slug)
 
 #     return render(request, 'post_detail.html', {'post':post, 'comments':comments})
 
@@ -273,11 +273,11 @@ def user_posts(request):
 # def post_delete(request, slug):
 #     post = get_object_or_404(Post,slug=slug)
 #     if request.user != post.author:
-#         return redirect('post_list')
+#         return redirect('blog:post_list')
 
 #     if request.method == 'POST':
 #         post.delete()
-#         return redirect('post_list')
+#         return redirect('blog:post_list')
 #     return render(request, 'components/post_confirm_delete.html', {'post': post})
 
 

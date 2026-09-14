@@ -47,7 +47,7 @@ def login_view(request):
         if not user is None:
             login(request,user)
             messages.success(request,f"welcome back {user.username}!")
-            return redirect ('post_list')
+            return redirect('blog:post_list')
         else:
             messages.error(request, "Invalid usrname or password.")
             return redirect('login')
