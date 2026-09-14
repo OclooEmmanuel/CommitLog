@@ -127,30 +127,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-# # 3. Add configuration (example)
-# JAZZMIN_SETTINGS = {
-#     "site_title": "My Cool Admin",
-#     "site_header": "My Cool Library",
-#     "welcome_sign": "Welcome to the Library Admin",
-#     "copyright": "My Cool Library",
-#     "show_ui_builder": True,
-
-
-# }
-# # You can also change the Bootstrap theme
-# JAZZMIN_UI_TWEAKS = {
-#     "card_animated": True,
-#     "theme": "quartz",  # Options: "flatly", "darkly", "litera", etc.
-#     "sidebar_dark": True,
-#     "navbar_dark": True,
-#    "default_theme_mode": "auto",
-#     "actions_sticky_top": True,
-# }
 
 

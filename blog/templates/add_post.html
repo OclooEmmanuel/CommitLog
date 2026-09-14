@@ -1,74 +1,37 @@
 {% extends 'base.html' %}
 
-
 {% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="bg-card border-card" style="border-radius:var(--radius-lg);padding:2.5rem;">
+        <h3 class="fw-bold mb-4"><i class="bi bi-pencil-square me-2"></i>New Post</h3>
 
+        {% if error %}
+        <div class="alert-commitlog alert-commitlog-error mb-4">{{ error }}</div>
+        {% endif %}
 
+        <form method="POST" class="form-commitlog">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" placeholder="Enter your post title..." required>
+          </div>
 
-<style>
-  body {
-    background-color: #f4f4f4;
-  }
+          <div class="mb-3">
+            <label class="form-label">Body</label>
+            <textarea name="body" class="form-control" rows="6" placeholder="Write your post content here..." required></textarea>
+          </div>
 
-  .form-card {
-    background-color: #fff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
-    padding: 2.5rem;
-    max-width: 650px;
-    margin: 60px auto;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .form-card:hover {
-    /* transform: translateY(-3px); */
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-  }
-
-  .form-label {
-    font-weight: 600;
-  }
-
-  .btn-publish {
-    background-color: #ffffff;
-    color: #0f0f0f;
-    border-color: #0f0f0f;
-    border-radius: 5px;
-    padding: 10px 25px;
-    font-weight: 500;
-    transition: 0.3s ease;
-  }
-
-  .btn-publish:hover {
-    background-color: #0b0b0b;
-    color: #fff;
-    transform: translateY(-2px);
-  }
-</style>
-
-<div class="container">
-  <div class="form-card">
-    <h2 class="text-center mb-4 fw-bold text-uppercase text-secondary">Add New Post</h2>
-
-    <form method="POST">
-      {% csrf_token %}
-      <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
-        <input type="text" name="title" id="title" class="form-control shadow-sm" placeholder="Enter your post title..." required>
+          <div class="d-flex justify-content-end gap-2 mt-4">
+            <a href="{% url 'blog:post_list' %}" class="btn btn-commitlog btn-commitlog-outline">Cancel</a>
+            <button type="submit" class="btn btn-commitlog btn-commitlog-green">
+              <i class="bi bi-cloud-upload"></i> Publish Post
+            </button>
+          </div>
+        </form>
       </div>
-
-      <div class="mb-3">
-        <label for="body" class="form-label">Body</label>
-        <textarea name="body" id="body" class="form-control shadow-sm" rows="6" placeholder="Write your post content here..." required></textarea>
-      </div>
-
-      <div class="text-center mt-4">
-        <button type="submit" class="btn btn-publish">Publish Post</button>
-      </div>
-    </form>
+    </div>
   </div>
 </div>
-
-
-
 {% endblock %}
